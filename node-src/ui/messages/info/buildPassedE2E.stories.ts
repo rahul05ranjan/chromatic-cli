@@ -12,7 +12,7 @@ export const BuildPassed = () =>
     build: {
       number: 42,
       webUrl: 'https://www.chromatic.com/build?appId=59c59bd0183bd100364e1d57&number=42',
-      changeCount: 0,
+      reviewableChangeCount: 0,
     },
   } as any);
 
@@ -22,7 +22,8 @@ export const BuildPassedWithChanges = () =>
     build: {
       number: 42,
       webUrl: 'https://www.chromatic.com/build?appId=59c59bd0183bd100364e1d57&number=42',
-      changeCount: 2,
+      status: 'PENDING',
+      reviewableChangeCount: 2,
     },
   } as any);
 
