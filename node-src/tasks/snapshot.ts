@@ -16,6 +16,9 @@ import buildPassedMessage from '../ui/messages/info/buildPassed';
 import speedUpCI from '../ui/messages/info/speedUpCI';
 import { pending } from '../ui/tasks/snapshot';
 
+// `reviewableChangeCount` is the number of tests whose change requires or received review. It is
+// counted by test status, so IGNORED tests are excluded by construction. It is unrelated to the
+// schema's `reviewable:` argument, which filters by test result and includes errors.
 const SnapshotBuildQuery = `
   query SnapshotBuildQuery($number: Int!) {
     app {
@@ -28,6 +31,7 @@ const SnapshotBuildQuery = `
         changeCount
         errorCount: testCount(statuses: [BROKEN])
         ignoredCount: testCount(statuses: [IGNORED])
+        reviewableChangeCount: testCount(statuses: [PENDING, ACCEPTED, DENIED])
         completedAt
       }
     }
@@ -45,6 +49,7 @@ interface BuildQueryResult {
       changeCount: number;
       errorCount: number;
       ignoredCount: number;
+      reviewableChangeCount: number;
       completedAt?: number;
     };
   };

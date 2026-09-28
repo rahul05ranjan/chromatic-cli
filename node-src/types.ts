@@ -449,6 +449,7 @@ export interface Context {
     accessibilityChangeCount: number;
     interactionTestFailuresCount: number;
     ignoredCount?: number;
+    reviewableChangeCount?: number;
     inProgressCount?: number;
     autoAcceptChanges: boolean;
     turboSnapEnabled?: boolean;
@@ -471,6 +472,7 @@ export interface Context {
       uiTests: boolean;
       uiReview: boolean;
       isReactNativeApp: boolean;
+      accessibilityTests?: { enabled: boolean };
     };
     tests?: {
       spec: {
