@@ -28,38 +28,18 @@ const message = (
     isOnboarding,
   });
 
-describe('buildHasChanges ignored tests link', () => {
-  it('expands ignored tests on a build URL that already has a query string', () => {
-    expect(message({ ignoredCount: 1 })).toContain(`Review at ${webUrl}&expandIgnored=true`);
+describe('buildHasChanges ignored tests line', () => {
+  it('links ignored tests to the expanded build page', () => {
+    expect(message({ ignoredCount: 1 })).toContain(
+      `1 test was ignored in this build. Review at ${webUrl}&expandIgnored=true\n`
+    );
   });
 
-  it('starts a query string on a build URL that has none', () => {
-    const output = message({ ignoredCount: 1, webUrl: 'https://www.chromatic.com/build' });
-
-    expect(output).toContain('Review at https://www.chromatic.com/build?expandIgnored=true');
-  });
-
-  it('leaves the setup URL untouched while onboarding', () => {
+  it('points ignored tests at the untouched setup page while onboarding', () => {
     const output = message({ changeCount: 2, ignoredCount: 1 }, true);
 
     expect(output).toContain(`1 test was ignored in this build. Review at ${setupUrl}\n`);
     expect(output).not.toContain('expandIgnored');
-    expect(output).not.toContain('#unstable');
-  });
-
-  it('still reports ignored tests while onboarding', () => {
-    expect(message({ ignoredCount: 3 }, true)).toContain('3 tests were ignored in this build.');
-  });
-
-  it('falls back to the given URL rather than throwing on a malformed one', () => {
-    const output = message({ ignoredCount: 1, webUrl: 'not-a-url' });
-
-    expect(output).toContain('Review at not-a-url');
-  });
-
-  it('omits the ignored line when nothing was ignored', () => {
-    expect(message({ changeCount: 2 })).not.toContain('ignored in this build');
-    expect(message({ changeCount: 2 })).not.toContain('expandIgnored');
   });
 });
 

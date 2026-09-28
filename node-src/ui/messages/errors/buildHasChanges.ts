@@ -3,25 +3,11 @@ import pluralize from 'pluralize';
 import { dedent } from 'ts-dedent';
 
 import { error, info } from '../../components/icons';
+import ignoredTests from '../../components/ignoredTests';
 import link from '../../components/link';
-
-const ignoredTestsUrl = (displayUrl: string, isOnboarding: boolean) => {
-  if (isOnboarding) {
-    return displayUrl;
-  }
-
-  try {
-    const url = new URL(displayUrl);
-    url.searchParams.set('expandIgnored', 'true');
-    return url.toString();
-  } catch {
-    return displayUrl;
-  }
-};
 
 export default ({ build, exitCode, isOnboarding }) => {
   const url = isOnboarding ? build.app.setupUrl : build.webUrl;
-  const ignoredUrl = ignoredTestsUrl(url, isOnboarding);
 
   const changeKinds = [
     build.changeCount > 0 && 'visual',
@@ -33,9 +19,7 @@ export default ({ build, exitCode, isOnboarding }) => {
     changeTotal > 0 &&
     chalk`${error} {bold ${pluralize(`${changeKinds.join(' and ')} changes`, changeTotal, true)} must be accepted as ${pluralize('baseline', changeTotal)}.} Review at ${link(url)}`;
 
-  const ignoredLine =
-    build.ignoredCount > 0 &&
-    chalk`{bold ${pluralize('test', build.ignoredCount, true)} ${pluralize('was', build.ignoredCount)} ignored in this build.} Review at ${link(ignoredUrl)}`;
+  const ignoredLine = ignoredTests({ ignoredCount: build.ignoredCount, url, isOnboarding });
 
   return dedent(chalk`
     ${[changesLine, ignoredLine].filter(Boolean).join('\n\n')}
